@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Destino {
+  id     Int      @id @default(autoincrement())
+  nombre String
+  tarifasComoOrigen  Tarifa[] @relation("TarifaOrigen")
+  tarifasComoDestino Tarifa[] @relation("TarifaDestino")
+  viajesComoOrigen   Viaje[]  @relation("ViajeOrigen")
+  viajesComoDestino  Viaje[]  @relation("ViajeDestino")
+}
+
+model Usuario {
+  id       Int    @id @default(autoincrement())
+  nombre   String
+  password String
+  email String
+  rol      Rol
+  unidades Unidad[]
+  viajes   Viaje[]
+}
+
+
+model Tarifa {
+  id            Int      @id @default(autoincrement())
+  origenId      Int
+  destinoId     Int
+  monto         Float
+  tipo          Tipo
+  origenDestino Destino @relation("TarifaOrigen", fields: [origenId], references: [id])
+  destinoDestino Destino @relation("TarifaDestino", fields: [destinoId], references: [id])
+  viajes        Viaje[]
+}
+
+model Unidad {
+  id      Int    @id @default(autoincrement())
+  nombre  String
+  chofer  Usuario @relation(fields: [choferId], references: [id])
+  choferId Int
+  viajes  Viaje[]
+}
+
+model Viaje {
+  id           Int      @id @default(autoincrement())
+  origenId     Int
+  destinoId    Int
+  montoId      Int
+  unidadId     Int
+  choferId     Int
+  origen       Destino @relation("ViajeOrigen", fields: [origenId], references: [id])
+  destino      Destino @relation("ViajeDestino", fields: [destinoId], references: [id])
+  monto        Tarifa  @relation(fields: [montoId], references: [id])
+  unidad       Unidad  @relation(fields: [unidadId], references: [id])
+  chofer       Usuario @relation(fields: [choferId], references: [id])
+}
+
+enum Rol {
+  ADMIN
+  CHOFER
+}
+enum Tipo {
+  REDONDO
+  SENCILLO
+}
