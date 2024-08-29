@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DestinosModule } from './destinos/destinos.module';
-import { UsuariosModule } from './usuarios/usuarios.module';
-import { TarifasModule } from './tarifas/tarifas.module';
-import { UnidadesModule } from './unidades/unidades.module';
-import { ViajesModule } from './viajes/viajes.module';
+import { DestinoModule } from './destinos/destinos.module';
+import { UsuarioModule } from './usuarios/usuarios.module';
+import { TarifaModule } from './tarifas/tarifas.module';
+import { UnidadModule } from './unidades/unidades.module';
+import { ViajeModule } from './viajes/viajes.module';
 
 @Module({
   imports: [
@@ -14,15 +14,15 @@ import { ViajesModule } from './viajes/viajes.module';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'taximetro',
+      database: 'taxi',
       autoLoadEntities: true,
       synchronize: true,
     }),
-    DestinosModule,
-    UsuariosModule,
-    TarifasModule,
-    UnidadesModule,
-    ViajesModule,
+    DestinoModule,
+    UsuarioModule,
+    TarifaModule,
+    UnidadModule,
+    ViajeModule,
   ],
 })
 export class AppModule {}

@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
+import { DestinoService } from './destinos.service';
+import { DestinoController } from './destinos.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DestinosService } from './destinos.service';
-import { DestinosController } from './destinos.controller';
 import { Destino } from './entities/destino.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Destino])],
-  providers: [DestinosService],
-  controllers: [DestinosController],
+  controllers: [DestinoController],
+  providers: [DestinoService],
 })
-export class DestinosModule {}
+export class DestinoModule {}

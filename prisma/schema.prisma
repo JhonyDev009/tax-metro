@@ -13,13 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+
 model Destino {
   id     Int      @id @default(autoincrement())
   nombre String
   tarifasComoOrigen  Tarifa[] @relation("TarifaOrigen")
   tarifasComoDestino Tarifa[] @relation("TarifaDestino")
-  viajesComoOrigen   Viaje[]  @relation("ViajeOrigen")
-  viajesComoDestino  Viaje[]  @relation("ViajeDestino")
+ 
 }
 
 model Usuario {
@@ -39,28 +40,26 @@ model Tarifa {
   destinoId     Int
   monto         Float
   tipo          Tipo
-  origenDestino Destino @relation("TarifaOrigen", fields: [origenId], references: [id])
-  destinoDestino Destino @relation("TarifaDestino", fields: [destinoId], references: [id])
+  origen        Destino @relation("TarifaOrigen", fields: [origenId], references: [id])
+  destino       Destino @relation("TarifaDestino", fields: [destinoId], references: [id])
   viajes        Viaje[]
 }
+
 
 model Unidad {
   id      Int    @id @default(autoincrement())
   nombre  String
-  chofer  Usuario @relation(fields: [choferId], references: [id])
-  choferId Int
+  chofer  Usuario? @relation(fields: [choferId], references: [id])
+  choferId Int?
+  status Status
   viajes  Viaje[]
 }
 
 model Viaje {
   id           Int      @id @default(autoincrement())
-  origenId     Int
-  destinoId    Int
   montoId      Int
   unidadId     Int
   choferId     Int
-  origen       Destino @relation("ViajeOrigen", fields: [origenId], references: [id])
-  destino      Destino @relation("ViajeDestino", fields: [destinoId], references: [id])
   monto        Tarifa  @relation(fields: [montoId], references: [id])
   unidad       Unidad  @relation(fields: [unidadId], references: [id])
   chofer       Usuario @relation(fields: [choferId], references: [id])
@@ -73,4 +72,9 @@ enum Rol {
 enum Tipo {
   REDONDO
   SENCILLO
+
 }
+enum Status {
+  HABILITADO
+  DESHABILITADO
+  }

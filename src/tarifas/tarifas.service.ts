@@ -1,30 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Tarifa } from './entities/tarifa.entity';
 import { CreateTarifaDto } from './dto/create-tarifa.dto';
+import { UpdateTarifaDto } from './dto/update-tarifa.dto';
+import { Tarifa } from './entities/tarifa.entity';
 
 @Injectable()
-export class TarifasService {
+export class TarifaService {
   constructor(
     @InjectRepository(Tarifa)
-    private tarifasRepository: Repository<Tarifa>,
+    private readonly tarifaRepository: Repository<Tarifa>,
   ) {}
 
-  create(createTarifaDto: CreateTarifaDto) {
-    const tarifa = this.tarifasRepository.create(createTarifaDto);
-    return this.tarifasRepository.save(tarifa);
+  async create(createTarifaDto: CreateTarifaDto): Promise<Tarifa> {
+    const tarifa = this.tarifaRepository.create(createTarifaDto);
+    return this.tarifaRepository.save(tarifa);
   }
 
-  findAll() {
-    return this.tarifasRepository.find();
+  async findAll(): Promise<Tarifa[]> {
+    return this.tarifaRepository.find({ relations: ['origen', 'destino'] });
   }
 
-  findOne(id: number) {
-    return this.tarifasRepository.findOneBy({ id });
+  async findOne(id: number): Promise<Tarifa> {
+    const tarifa = await this.tarifaRepository.findOne({
+      where: { id },
+      relations: ['origen', 'destino'],
+    });
+    if (!tarifa) {
+      throw new NotFoundException(`Tarifa con id ${id} no encontrada`);
+    }
+    return tarifa;
+  }
+
+  async update(id: number, updateTarifaDto: UpdateTarifaDto): Promise<Tarifa> {
+    await this.findOne(id);
+    await this.tarifaRepository.update(id, updateTarifaDto);
+    return this.findOne(id);
   }
 
   async remove(id: number): Promise<void> {
-    await this.tarifasRepository.delete(id);
+    const tarifa = await this.findOne(id);
+    await this.tarifaRepository.remove(tarifa);
   }
 }
+

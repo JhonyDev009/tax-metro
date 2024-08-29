@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
+import { TarifaService } from './tarifas.service';
+import { TarifaController } from './tarifas.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TarifasService } from './tarifas.service';
-import { TarifasController } from './tarifas.controller';
 import { Tarifa } from './entities/tarifa.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Tarifa])],
-  providers: [TarifasService],
-  controllers: [TarifasController],
+  controllers: [TarifaController],
+  providers: [TarifaService],
+  exports: [TypeOrmModule]
 })
-export class TarifasModule {}
+export class TarifaModule {}

@@ -1,9 +1,20 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Status } from '../entities/status.enum';
 
 export class CreateUnidadDto {
   @IsNotEmpty()
+  @IsString()
   nombre: string;
 
   @IsNotEmpty()
-  choferId: number;
+  @IsNumber()
+  choferId?: number;
+
+  @IsNotEmpty()
+  @IsEnum(Status)
+  status: Status;
+
+  @IsBoolean()
+  jornadaActiva: boolean;
 }
+

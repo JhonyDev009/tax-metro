@@ -1,15 +1,20 @@
 import { Module } from '@nestjs/common';
+import { ViajeService } from './viajes.service';
+import { ViajeController } from './viajes.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ViajesService } from './viajes.service';
-import { ViajesController } from './viajes.controller';
 import { Viaje } from './entities/viaje.entity';
-import { Unidad } from 'src/unidades/entities/unidade.entity';
+import { TarifaModule } from 'src/tarifas/tarifas.module';
 import { Tarifa } from 'src/tarifas/entities/tarifa.entity';
-import { Usuario } from 'src/usuarios/entities/usuario.entity';
+import { Unidad } from 'src/unidades/entities/unidade.entity';
+import { UnidadModule } from 'src/unidades/unidades.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Viaje, Unidad, Tarifa, Usuario])],
-  providers: [ViajesService],
-  controllers: [ViajesController],
+  imports: [TypeOrmModule.forFeature([Viaje, Tarifa, Unidad]),
+  TarifaModule,
+  UnidadModule,
+],
+  controllers: [ViajeController],
+  providers: [ViajeService],
+  
 })
-export class ViajesModule {}
+export class ViajeModule {}

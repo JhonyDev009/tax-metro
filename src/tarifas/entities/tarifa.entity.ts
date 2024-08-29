@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
-import { Destino } from 'src/destinos/entities/destino.entity'; // Ajusta la ruta según sea necesario
-import { Viaje } from 'src/viajes/entities/viaje.entity'; // Ajusta la ruta según sea necesario
-import { Tipo } from './tipo.enum'; // Ajusta la ruta según sea necesario
+import { Destino } from 'src/destinos/entities/destino.entity';
+import { Viaje } from 'src/viajes/entities/viaje.entity';
+import { Tipo } from './tipo.enum';
 
 @Entity()
 export class Tarifa {
@@ -14,23 +14,18 @@ export class Tarifa {
   @Column()
   destinoId: number;
 
-  @Column('float')
+  @Column()
   monto: number;
 
-  @Column({
-    type: 'enum',
-    enum: Tipo,
-  })
+  @Column({ type: 'enum', enum: Tipo })
   tipo: Tipo;
 
   @ManyToOne(() => Destino, (destino) => destino.tarifasComoOrigen)
-  origenDestino: Destino;
+  origen: Destino;
 
   @ManyToOne(() => Destino, (destino) => destino.tarifasComoDestino)
-  destinoDestino: Destino;
+  destino: Destino;
 
-  @OneToMany(() => Viaje, (viaje) => viaje.monto)
+  @OneToMany(() => Viaje, (viaje) => viaje.tarifa)
   viajes: Viaje[];
 }
-
-

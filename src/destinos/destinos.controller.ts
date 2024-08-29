@@ -1,29 +1,35 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
-import { DestinosService } from './destinos.service';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { DestinoService } from './destinos.service';
 import { CreateDestinoDto } from './dto/create-destino.dto';
+import { UpdateDestinoDto } from './dto/update-destino.dto';
 
 @Controller('destinos')
-export class DestinosController {
-  constructor(private readonly destinosService: DestinosService) {}
+export class DestinoController {
+  constructor(private readonly destinoService: DestinoService) {}
 
   @Post()
   create(@Body() createDestinoDto: CreateDestinoDto) {
-    return this.destinosService.create(createDestinoDto);
+    return this.destinoService.create(createDestinoDto);
   }
 
   @Get()
   findAll() {
-    return this.destinosService.findAll();
+    return this.destinoService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.destinosService.findOne(+id);
+    return this.destinoService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateDestinoDto: UpdateDestinoDto) {
+    return this.destinoService.update(+id, updateDestinoDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.destinosService.remove(+id);
+    return this.destinoService.remove(+id);
   }
 }
 
